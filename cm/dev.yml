@@ -1,0 +1,24 @@
+# Окружение для разработки
+---
+- hosts: development
+  become: yes
+
+  pre_tasks:
+    - name: "Set env variables"
+      lineinfile:
+        dest: "/home/vagrant/.bashrc"
+        regexp: "^export {{ item.var }}="
+        line: "export {{ item.var }}={{ item.value }}"
+      with_items:
+        - { var: "RAILS_ENV", value: "development" }
+
+    - name: "Autofollow to project on logon"
+      lineinfile:
+        dest: "/home/vagrant/.bashrc"
+        regexp: "^cd ~/rails-app"
+        line: "cd ~/rails-app"
+
+  roles:
+    - role: ruby-brightbox
+    - role: apt
+    - role: mysql

@@ -1,0 +1,23 @@
+---
+apt_packages:
+  - git
+  - libmysqlclient-dev
+  - libsqlite3-dev
+  - ruby2.3-dev
+  - zlib1g-dev
+  - liblzma-dev
+  - nodejs
+  - mc
+  - vim
+
+ruby_version: 2.3
+
+mysql_databases:
+  - name: rails-app
+    collation: "utf8_general_ci"
+    encoding: "utf8"
+mysql_users:
+  - name: user_rails-app
+    pass: 123456
+    priv: "*.*:ALL"
+    host: "%"
