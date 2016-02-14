@@ -246,5 +246,5 @@ node_modules
 ###
 
 .env.local
-provisioning/roles/
+cm/roles/
 .secret
