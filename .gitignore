@@ -247,5 +247,4 @@ node_modules
 
 .env.local
 provisioning/roles/
-config/local.yml
-gems
+.secret
