@@ -6,6 +6,6 @@
 - src: https://github.com/vterdunov/ansible-ruby-brightbox
   name: ruby-brightbox
 
-# mysql
-- src: https://github.com/ANXS/mysql
-  name: mysql
+# postgresql
+- src: https://github.com/ANXS/postgresql
+  name: postgresql

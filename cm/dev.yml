@@ -21,4 +21,4 @@
   roles:
     - role: ruby-brightbox
     - role: apt
-    - role: mysql
+    - role: postgresql

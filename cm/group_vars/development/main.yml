@@ -12,12 +12,22 @@ apt_packages:
 
 ruby_version: 2.3
 
-mysql_databases:
+postgresql_databases:
   - name: rails-app
-    collation: "utf8_general_ci"
-    encoding: "utf8"
-mysql_users:
+    owner: user_rails-app          # optional; specify the owner of the database
+    hstore: yes         # flag to install the hstore extension on this database (yes/no)
+    uuid_ossp: yes      # flag to install the uuid-ossp extension on this database (yes/no)
+    citext: yes         # flag to install the citext extension on this database (yes/no)
+
+# List of users to be created (optional)
+postgresql_users:
   - name: user_rails-app
     pass: 123456
-    priv: "*.*:ALL"
-    host: "%"
+    encrypted: no       # denotes if the password is already encrypted.
+
+# List of user privileges to be applied (optional)
+postgresql_user_privileges:
+  - name: user_rails-app           # user name
+    db: rails-app                  # database
+    priv: "ALL"                 # privilege string format: example: INSERT,UPDATE/table:SELECT/anothertable:ALL
+    role_attr_flags: "CREATEDB" # role attribute flags
