@@ -1,16 +1,24 @@
-FROM ruby:2.3
-
+FROM alpine:3.2
 MAINTAINER Terdunov Vyacheslav <mail2slick@gmail.com>
 
-RUN apt-get update -qq && \
-  apt-get install -y build-essential libxml2-dev libxslt1-dev nodejs
+ENV BUILD_PACKAGES bash curl-dev ruby-dev build-base nodejs tzdata \
+  libxml2-dev libxslt-dev libffi-dev postgresql-dev sqlite-dev
+ENV RUBY_PACKAGES ruby ruby-io-console
 
-ENV APP_HOME /usr/app
-RUN mkdir $APP_HOME
-WORKDIR $APP_HOME
+RUN apk update && \
+    apk upgrade && \
+    apk add $BUILD_PACKAGES && \
+    apk add $RUBY_PACKAGES && \
+    rm -rf /var/cache/apk/*
 
-#ADD Gemfile* $APP_HOME/
-#RUN bundle install
+RUN mkdir /usr/app
+WORKDIR /usr/app
 
-ADD . $APP_HOME
+COPY Gemfile /usr/app/
+COPY Gemfile.lock /usr/app/
+RUN gem install bundler --no-ri --no-rdoc && \
+  bundle config build.nokogiri --use-system-libraries && \
+  bundle install
 
+COPY . /usr/app
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
