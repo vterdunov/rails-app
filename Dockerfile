@@ -1,24 +1,31 @@
-FROM alpine:3.2
+FROM ruby:2.3.0-alpine
 MAINTAINER Terdunov Vyacheslav <mail2slick@gmail.com>
 
-ENV BUILD_PACKAGES bash curl-dev ruby-dev build-base nodejs tzdata \
-  libxml2-dev libxslt-dev libffi-dev postgresql-dev sqlite-dev
-ENV RUBY_PACKAGES ruby ruby-io-console
+ENV APP_HOME /usr/src/app
+ENV BUILD_PACKAGES \
+  ruby-dev \
+  build-base \
+  nodejs \
+  tzdata \
+  libxml2-dev \
+  libxslt-dev \
+  libffi-dev \
+  postgresql-dev \
+  sqlite-dev
 
 RUN apk update && \
     apk upgrade && \
     apk add $BUILD_PACKAGES && \
-    apk add $RUBY_PACKAGES && \
     rm -rf /var/cache/apk/*
 
-RUN mkdir /usr/app
-WORKDIR /usr/app
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
 
-COPY Gemfile /usr/app/
-COPY Gemfile.lock /usr/app/
-RUN gem install bundler --no-ri --no-rdoc && \
-  bundle config build.nokogiri --use-system-libraries && \
-  bundle install
+COPY Gemfile $APP_HOME
+COPY Gemfile.lock $APP_HOME
 
-COPY . /usr/app
+RUN bundle config build.nokogiri --use-system-libraries && \
+  bundle install --jobs=4
+
+COPY . $APP_HOME
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
